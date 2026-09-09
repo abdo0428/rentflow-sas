@@ -1,0 +1,1 @@
+<x-guest-layout><p class="mb-4 text-5xl font-semibold text-emerald-700">503</p><h1 class="page-title">{{ __('app.error_title') }}</h1><p class="muted mt-4">{{ __('app.error_description') }}</p><a href="{{ route(auth()->check() ? 'dashboard' : 'login') }}" class="btn-primary mt-6">{{ __(auth()->check() ? 'app.go_dashboard' : 'app.login') }}</a></x-guest-layout>

@@ -1,0 +1,2 @@
+@props(['cancel', 'label'])
+<div class="card flex flex-wrap items-center justify-between gap-4 p-5"><p class="muted">{{ __('property.required_hint') }}</p><div class="flex items-center gap-3"><a href="{{ $cancel }}" class="btn-secondary">{{ __('app.cancel') }}</a><x-submit>{{ $label }}</x-submit></div></div>

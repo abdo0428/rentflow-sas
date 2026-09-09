@@ -1,0 +1,2 @@
+@props(['title', 'description' => null, 'icon' => 'documents'])
+<section class="card grid overflow-hidden lg:grid-cols-[240px_minmax(0,1fr)]"><header class="border-b border-slate-100 bg-slate-50/70 p-6 lg:border-b-0 lg:border-e"><span class="mb-4 inline-flex rounded-xl border border-slate-200 bg-white p-2.5 text-emerald-700"><x-icon :name="$icon"/></span><h2 class="font-semibold text-slate-900">{{ $title }}</h2>@if($description)<p class="muted mt-2">{{ $description }}</p>@endif</header><div class="grid content-start gap-5 p-6 sm:grid-cols-2">{{ $slot }}</div></section>

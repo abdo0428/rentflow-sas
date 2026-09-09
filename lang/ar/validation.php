@@ -1,0 +1,23 @@
+<?php
+
+return ['required' => 'حقل :attribute مطلوب.',
+    'string' => 'يجب أن يكون :attribute نصًا.',
+    'email' => 'يجب أن يكون :attribute بريدًا إلكترونيًا صالحًا.',
+    'unique' => ':attribute مستخدم بالفعل.',
+    'confirmed' => 'تأكيد :attribute غير متطابق.',
+    'current_password' => 'كلمة المرور الحالية غير صحيحة.',
+    'lowercase' => 'يجب أن يحتوي :attribute على أحرف صغيرة.',
+    'in' => 'قيمة :attribute غير صالحة.',
+    'integer' => 'يجب أن يكون :attribute عددًا صحيحًا.',
+    'numeric' => 'يجب أن يكون :attribute رقمًا.',
+    'exists' => 'قيمة :attribute المحددة غير متاحة.',
+    'decimal' => 'يجب أن يحتوي :attribute على عدد من :min إلى :max منازل عشرية.',
+    'max' => ['string' => 'يجب ألا يتجاوز :attribute عدد :max أحرف.', 'numeric' => 'يجب ألا يتجاوز :attribute القيمة :max.'],
+    'min' => ['string' => 'يجب ألا يقل :attribute عن :min أحرف.', 'numeric' => 'يجب ألا يقل :attribute عن :min.'],
+    'attributes' => ['name' => 'الاسم',
+        'company_name' => 'اسم الشركة',
+        'email' => 'البريد الإلكتروني',
+        'password' => 'كلمة المرور',
+        'password_confirmation' => 'تأكيد كلمة المرور',
+        'current_password' => 'كلمة المرور الحالية',
+        'phone' => 'الهاتف']];

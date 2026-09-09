@@ -1,0 +1,2 @@
+@props(['reason'])
+@if($reason)<div class="flex items-start gap-3 rounded-xl border border-amber-200/60 bg-amber-50/60 p-4 text-sm text-amber-900"><x-icon name="documents" class="mt-0.5 h-4 w-4"/><p><span class="font-semibold">{{ __('property.deletion_unavailable') }}.</span> {{ __($reason) }}</p></div>@endif

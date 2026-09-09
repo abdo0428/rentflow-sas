@@ -1,0 +1,23 @@
+<?php
+
+return ['required' => 'The :attribute field is required.',
+    'string' => 'The :attribute must be a string.',
+    'email' => 'The :attribute must be a valid email address.',
+    'unique' => 'The :attribute has already been taken.',
+    'confirmed' => 'The :attribute confirmation does not match.',
+    'current_password' => 'The password is incorrect.',
+    'lowercase' => 'The :attribute must be lowercase.',
+    'in' => 'The selected :attribute is invalid.',
+    'integer' => 'The :attribute must be an integer.',
+    'numeric' => 'The :attribute must be a number.',
+    'exists' => 'The selected :attribute is unavailable.',
+    'decimal' => 'The :attribute must have between :min and :max decimal places.',
+    'max' => ['string' => 'The :attribute may not be greater than :max characters.', 'numeric' => 'The :attribute may not be greater than :max.'],
+    'min' => ['string' => 'The :attribute must be at least :min characters.', 'numeric' => 'The :attribute must be at least :min.'],
+    'attributes' => ['name' => 'Name',
+        'company_name' => 'Company name',
+        'email' => 'Email address',
+        'password' => 'Password',
+        'password_confirmation' => 'Confirm password',
+        'current_password' => 'Current password',
+        'phone' => 'Phone']];

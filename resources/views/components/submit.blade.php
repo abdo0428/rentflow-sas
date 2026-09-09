@@ -1,0 +1,1 @@
+<button type="submit" :disabled="submitting" {{ $attributes->class(['btn-primary']) }}><span x-show="!submitting" class="inline-flex items-center justify-center gap-2">{{ $slot }}</span><span x-cloak x-show="submitting" role="status">{{ __('app.loading') }}</span></button>

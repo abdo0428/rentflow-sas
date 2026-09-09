@@ -1,0 +1,5 @@
+<div x-data="{ action: '', label: '' }" @confirm-delete.window="action = $event.detail.action; label = $event.detail.label; $dispatch('open-modal', 'delete-property')">
+<x-modal name="delete-property" maxWidth="md" labelledBy="delete-property-title" focusable>
+<form method="POST" :action="action" x-data="{ submitting: false }" @submit="submitting = true" @open-modal.window="submitting = false" class="p-6">@csrf @method('DELETE')
+<span class="mb-5 inline-flex rounded-2xl bg-red-50 p-3 text-red-600"><x-icon name="trash" class="h-6 w-6"/></span><h2 id="delete-property-title" class="text-xl font-semibold text-slate-900">{{ __('property.delete_title') }}</h2><p class="muted mt-3" x-text="@js(__('property.delete_description', ['name' => ':record'])).replace(':record', label)"></p><div class="mt-7 flex flex-wrap justify-end gap-3"><x-secondary-button @click="$dispatch('close')">{{ __('app.cancel') }}</x-secondary-button><x-danger-button x-bind:disabled="submitting"><span x-show="!submitting">{{ __('property.delete_confirm') }}</span><span x-cloak x-show="submitting">{{ __('app.loading') }}</span></x-danger-button></div>
+</form></x-modal></div>

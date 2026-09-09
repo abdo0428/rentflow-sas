@@ -1,0 +1,8 @@
+<x-app-layout>
+<x-slot name="breadcrumbs"><x-breadcrumbs :items="[__('app.buildings')=>route('buildings.index'), $building->name=>null]"/></x-slot>
+<x-page-header :title="$building->name" :description="$building->code.' · '.$building->city" icon="buildings"><x-slot name="actions"><x-detail-actions :record="$building" module="buildings" :label="$building->name"/></x-slot></x-page-header>
+<div class="grid gap-4 sm:grid-cols-3"><x-stat-card :label="__('property.total_units')" :value="$building->units_count" icon="units"/><x-stat-card :label="__('app.occupied')" :value="$building->occupied_units_count" icon="tenants"/><x-stat-card :label="__('app.vacant')" :value="$building->vacant_units_count" icon="check"/></div>
+<x-card :title="__('property.building_information')"><x-slot name="actions"><x-badge :value="$building->status"/></x-slot><x-details-list :record="$building" :fields="['name','code','city','district','total_floors','address','notes']"/></x-card>
+@can('viewAny', \App\Models\Unit::class)<x-card :title="__('property.units_in_building')"><x-slot name="actions">@can('create', \App\Models\Unit::class)<a href="{{ route('units.create', ['building_id'=>$building->id]) }}" class="btn-secondary text-emerald-700"><x-icon name="plus" class="h-4 w-4"/>{{ __('property.add_unit') }}</a>@endcan</x-slot><x-unit-table :units="$units" :showBuilding="false"/></x-card>@endcan
+@can('delete', $building)<x-deletion-notice :reason="$deletionReason"/>@endcan
+</x-app-layout>

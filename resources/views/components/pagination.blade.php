@@ -1,0 +1,8 @@
+@if($paginator->hasPages())
+<nav class="flex flex-wrap items-center justify-between gap-4 text-sm" aria-label="{{ __('pagination.results') }}">
+<p class="text-xs text-slate-500">{{ __('pagination.showing') }} <span class="font-medium text-slate-700">{{ $paginator->firstItem() }}–{{ $paginator->lastItem() }}</span> {{ __('pagination.of') }} {{ $paginator->total() }} {{ __('pagination.results') }}</p>
+<div class="flex items-center gap-1.5">
+@if($paginator->onFirstPage())<span class="btn-secondary opacity-40" aria-disabled="true">{{ __('pagination.previous') }}</span>@else<a href="{{ $paginator->previousPageUrl() }}" rel="prev" class="btn-secondary">{{ __('pagination.previous') }}</a>@endif
+<div class="hidden items-center gap-1 sm:flex">@foreach($elements as $element)@if(is_string($element))<span class="px-1 text-slate-400">{{ $element }}</span>@else @foreach($element as $page => $url)@if($page === $paginator->currentPage())<span class="flex h-10 min-w-10 items-center justify-center rounded-lg bg-emerald-700 px-2 text-xs font-semibold text-white" aria-current="page">{{ $page }}</span>@else<a href="{{ $url }}" class="flex h-10 min-w-10 items-center justify-center rounded-lg px-2 text-xs text-slate-500 hover:bg-slate-100" aria-label="{{ __('property.page', ['page' => $page]) }}">{{ $page }}</a>@endif @endforeach @endif @endforeach</div>
+@if($paginator->hasMorePages())<a href="{{ $paginator->nextPageUrl() }}" rel="next" class="btn-secondary">{{ __('pagination.next') }}</a>@else<span class="btn-secondary opacity-40" aria-disabled="true">{{ __('pagination.next') }}</span>@endif
+</div></nav>@endif

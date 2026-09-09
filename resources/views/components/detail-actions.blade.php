@@ -1,0 +1,3 @@
+@props(['record','module','label'])
+@can('update', $record)<a href="{{ route($module.'.edit', $record) }}" class="btn-secondary"><x-icon name="edit" class="h-4 w-4"/>{{ __('property.edit') }}</a>@endcan
+@can('delete', $record)<button type="button" x-data @click="$dispatch('confirm-delete', { action: @js(route($module.'.destroy', $record)), label: @js($label) })" class="btn-secondary text-red-600 hover:border-red-200 hover:bg-red-50"><x-icon name="trash" class="h-4 w-4"/>{{ __('property.delete') }}</button>@endcan

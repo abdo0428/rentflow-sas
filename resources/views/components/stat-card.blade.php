@@ -1,0 +1,2 @@
+@props(['label', 'value', 'icon' => 'units', 'hint' => null])
+<div class="card flex min-w-0 items-center gap-4 p-5"><span class="rounded-xl bg-emerald-50 p-3 text-emerald-700"><x-icon :name="$icon"/></span><div class="min-w-0"><p class="text-xs font-medium text-slate-500">{{ $label }}</p><p class="mt-1 text-2xl font-semibold tabular-nums tracking-tight text-slate-900">{{ $value }}</p>@if($hint)<p class="mt-1 text-xs text-slate-400">{{ $hint }}</p>@endif</div></div>

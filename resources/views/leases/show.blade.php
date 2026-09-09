@@ -1,0 +1,11 @@
+<x-app-layout>
+    <x-slot name="breadcrumbs"><x-breadcrumbs :items="[__('app.leases') => route('leases.index'), $lease->contract_number => null]"/></x-slot>
+    <x-page-header :title="$lease->contract_number" :description="$lease->tenant?->full_name" icon="leases"><x-slot name="actions"><x-badge :value="$lease->status"/><x-detail-actions :record="$lease" module="leases" :label="$lease->contract_number"/></x-slot></x-page-header>
+    <div class="grid gap-4 sm:grid-cols-3"><x-stat-card :label="__('app.monthly_rent')" :value="number_format($lease->monthly_rent, 2).' '.__('app.sar')" icon="payments"/><x-stat-card :label="__('workflow.attributes.security_deposit')" :value="number_format($lease->security_deposit, 2).' '.__('app.sar')" icon="leases"/><x-stat-card :label="__('workflow.attributes.payment_due_day')" :value="$lease->payment_due_day" icon="payments"/></div>
+    <div class="grid items-start gap-6 xl:grid-cols-[2fr_1fr]">
+        <x-card :title="__('workflow.contract_details')"><x-details-list :record="$lease" :fields="['contract_number','start_date','end_date','status']" translation="workflow.attributes"/></x-card>
+        <x-card :title="__('workflow.attributes.unit_id')"><div class="space-y-3 p-6"><p class="text-lg font-semibold text-slate-900">{{ $lease->unit?->building?->name }} · {{ $lease->unit?->unit_number }}</p><p class="muted">{{ $lease->tenant?->full_name }}</p><p class="rounded-lg bg-slate-50 p-3 text-xs leading-6 text-slate-500">{{ $lease->status === 'draft' ? __('workflow.schedule_draft') : __('workflow.schedule_locked') }}</p></div></x-card>
+    </div>
+    @if($payments)<x-card :title="__('workflow.payment_schedule')" :description="__('workflow.lease_schedule_hint')"><x-payment-table :payments="$payments"/></x-card>@endif
+    @if($documents->isNotEmpty())<x-card :title="__('app.documents')"><ul class="divide-y divide-slate-100">@foreach($documents as $document)<li class="flex items-center justify-between gap-4 p-5"><span>{{ $document->title }}</span><a href="{{ route('documents.download', $document) }}" class="text-link">{{ __('app.download') }}</a></li>@endforeach</ul></x-card>@endif
+</x-app-layout>

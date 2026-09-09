@@ -1,0 +1,7 @@
+<div class="flex flex-wrap items-center justify-between gap-5"><div class="max-w-xl"><h2 class="font-semibold text-slate-900">{{ __('app.delete_account') }}</h2><p class="muted mt-2">{{ __('app.delete_description') }}</p></div><x-danger-button type="button" x-data @click="$dispatch('open-modal', 'confirm-user-deletion')">{{ __('app.delete_account') }}</x-danger-button></div>
+<x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
+<form method="POST" action="{{ route('profile.destroy') }}" x-data="{ submitting: false }" @submit="submitting = true" class="space-y-5 p-6">@csrf @method('delete')
+<h2 id="delete-account-title" class="text-lg font-semibold text-slate-900">{{ __('app.delete_confirm') }}</h2><p class="muted">{{ __('app.delete_confirm_description') }}</p>
+<div><x-input-label for="delete_password" :value="__('app.password')"/><x-text-input id="delete_password" name="password" type="password" autocomplete="current-password" required/><x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2"/></div>
+<div class="flex justify-end gap-3"><x-secondary-button @click="$dispatch('close')">{{ __('app.cancel') }}</x-secondary-button><x-danger-button :disabled="false" x-bind:disabled="submitting">{{ __('app.delete_account') }}</x-danger-button></div>
+</form></x-modal>

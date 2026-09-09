@@ -1,0 +1,7 @@
+<h2 class="text-lg font-semibold text-slate-900">{{ __('app.update_password') }}</h2><p class="muted mb-6 mt-2">{{ __('app.password_hint') }}</p>
+<form method="POST" action="{{ route('password.update') }}" x-data="{ submitting: false }" @submit="submitting = true" class="space-y-5">@csrf @method('put')
+<div><x-input-label for="update_current_password" :value="__('app.current_password')"/><x-text-input id="update_current_password" name="current_password" type="password" autocomplete="current-password" required/><x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2"/></div>
+<div><x-input-label for="update_password" :value="__('app.new_password')"/><x-text-input id="update_password" name="password" type="password" autocomplete="new-password" required/><x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2"/></div>
+<div><x-input-label for="update_password_confirmation" :value="__('app.password_confirmation')"/><x-text-input id="update_password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" required/></div>
+<div class="flex items-center gap-4"><x-submit>{{ __('app.save') }}</x-submit>@if(session('status') === 'password-updated')<p role="status" class="text-sm text-emerald-700">{{ __('app.saved') }}</p>@endif</div>
+</form>

@@ -1,0 +1,1 @@
+{{-- Navigation is rendered by the shared app layout. --}}

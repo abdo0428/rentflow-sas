@@ -1,0 +1,3 @@
+@props(['records', 'columns', 'module', 'title'])
+@if($records->isEmpty())<x-empty-state :title="__('property.no_related')" :description="__('property.no_related_hint')"/>
+@else<x-data-table :caption="$title" :headings="[...array_map(fn ($column) => __('app.'.$column), $columns), __('app.actions')]">@foreach($records as $record)<tr>@foreach($columns as $column)<td><x-data-value :value="$record->$column" :column="$column"/></td>@endforeach<td><a class="text-link text-xs" href="{{ route($module.'.show', $record) }}">{{ __('app.view') }}</a></td></tr>@endforeach</x-data-table><div class="px-5 py-4">{{ $records->links('components.pagination') }}</div>@endif

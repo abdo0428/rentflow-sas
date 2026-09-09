@@ -1,0 +1,22 @@
+<x-app-layout>
+<x-slot name="header">{{ __('app.overview') }}</x-slot>
+<div class="flex flex-wrap items-start justify-between gap-4"><div><p class="mb-2 text-xs font-semibold uppercase tracking-widest text-emerald-700">{{ __('app.'.$role) }}</p><h1 class="page-title">{{ __('app.welcome', ['name' => auth()->user()->name]) }}</h1><p class="muted mt-2">{{ __('app.dashboard_intro') }}</p></div><div class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-500">{{ __('app.today') }} <span class="ms-2 font-medium text-slate-700" dir="ltr">{{ now()->format('Y-m-d') }}</span></div></div>
+<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+@foreach($metrics as $metric)
+<a href="{{ route($metric['route']) }}" class="card group p-5 transition hover:border-emerald-200 hover:shadow-md"><div class="flex items-center justify-between"><p class="text-sm font-medium text-slate-500">{{ __('app.'.$metric['label']) }}</p><span class="rounded-xl bg-emerald-50 p-2.5 text-emerald-700"><x-icon :name="$metric['icon']"/></span></div><p class="mt-5 text-3xl font-semibold tracking-tight text-slate-900">{{ $metric['value'] }}</p><span class="mt-4 flex items-center gap-1 text-xs text-slate-400 group-hover:text-emerald-700">{{ __('app.view_all') }}<x-icon name="arrow" class="h-3 w-3 rtl:rotate-180"/></span></a>
+@endforeach
+</div>
+<div class="grid gap-6 xl:grid-cols-3">
+@can('payments.view')
+<section class="card overflow-hidden xl:col-span-2"><div class="flex items-center justify-between gap-3 p-5"><h2 class="font-semibold text-slate-900">{{ __('app.recent_payments') }}</h2><a href="{{ route('payments.index') }}" class="text-link text-xs">{{ __('app.view_all') }}</a></div>
+@if($payments->isEmpty())<x-empty-state/>@else<div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">{{ __('app.id') }}</th><th scope="col">{{ __('app.amount') }}</th><th scope="col">{{ __('app.due_date') }}</th><th scope="col">{{ __('app.status') }}</th></tr></thead><tbody>@foreach($payments as $payment)<tr><td><a href="{{ route('payments.show', $payment) }}" class="text-link">#{{ $payment->id }}</a></td><td><x-data-value :value="$payment->amount" column="amount"/></td><td><x-data-value :value="$payment->due_date" column="due_date"/></td><td><x-badge :value="$payment->status"/></td></tr>@endforeach</tbody></table></div>@endif
+</section>
+@endcan
+@can('maintenance.view')
+<section class="card p-5 {{ auth()->user()->can('payments.view') ? '' : 'xl:col-span-3' }}"><div class="mb-2 flex items-center justify-between gap-3"><h2 class="font-semibold text-slate-900">{{ __('app.recent_requests') }}</h2><a href="{{ route('maintenance.index') }}" class="text-link text-xs">{{ __('app.view_all') }}</a></div>@forelse($requests as $request)<a href="{{ route('maintenance.show', $request) }}" class="flex items-start gap-3 rounded-lg border-b border-slate-100 py-4 transition hover:bg-slate-50"><span class="mt-1 rounded-lg bg-slate-100 p-2 text-slate-500"><x-icon name="maintenance" class="h-4 w-4"/></span><div class="min-w-0 flex-1"><h3 class="mb-2 truncate text-sm font-medium text-slate-800">{{ $request->title }}</h3><x-badge :value="$request->status"/></div><span class="text-xs text-slate-400">#{{ $request->id }}</span></a>@empty<x-empty-state/>@endforelse</section>
+@endcan
+</div>
+@can('announcements.view')
+<section><div class="mb-4 flex items-center justify-between"><h2 class="font-semibold text-slate-900">{{ __('app.latest_announcements') }}</h2><a href="{{ route('announcements.index') }}" class="text-link text-xs">{{ __('app.view_all') }}</a></div><div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">@forelse($announcements as $announcement)<a href="{{ route('announcements.show', $announcement) }}" class="card p-5 transition hover:border-emerald-200"><div class="mb-4 flex items-center gap-2 text-xs text-emerald-700"><x-icon name="announcements" class="h-4 w-4"/>{{ __('app.'.$announcement->target) }}<span class="ms-auto text-slate-400">{{ $announcement->published_at->format('Y-m-d') }}</span></div><h3 class="font-medium text-slate-900">{{ $announcement->title }}</h3><p class="muted mt-2 line-clamp-2">{{ $announcement->body }}</p></a>@empty<div class="card md:col-span-2 xl:col-span-3"><x-empty-state/></div>@endforelse</div></section>
+@endcan
+</x-app-layout>

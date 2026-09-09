@@ -1,0 +1,2 @@
+@props(['headings', 'caption'])
+<div class="table-wrap"><table class="data-table"><caption class="sr-only">{{ $caption }}</caption><thead><tr>@foreach($headings as $heading)<th scope="col">{{ $heading }}</th>@endforeach</tr></thead><tbody>{{ $slot }}</tbody></table></div>

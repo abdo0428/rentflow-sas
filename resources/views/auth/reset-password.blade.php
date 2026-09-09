@@ -1,0 +1,4 @@
+<x-guest-layout>
+<div class="mb-8"><h1 class="text-3xl font-semibold tracking-tight text-slate-900">{{ __('app.reset_title') }}</h1><p class="muted mt-3">{{ __('app.password_hint') }}</p></div>
+<form method="POST" action="{{ route('password.store') }}" x-data="{ submitting: false }" @submit="submitting = true" class="space-y-5">@csrf<input type="hidden" name="token" value="{{ $request->route('token') }}"><x-field name="email" type="email" :value="$request->email" autocomplete="username" dir="ltr"/><x-field name="password" type="password" autocomplete="new-password"/><x-field name="password_confirmation" type="password" autocomplete="new-password"/><x-submit class="w-full">{{ __('app.reset_password') }}</x-submit></form>
+</x-guest-layout>

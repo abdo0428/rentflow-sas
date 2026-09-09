@@ -1,9 +1,32 @@
-@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+[x-cloak] { display: none !important; }
+@layer base {
+    body { @apply bg-slate-50 font-sans text-slate-700 antialiased; }
+    :focus-visible { @apply outline-none ring-2 ring-emerald-500 ring-offset-2; }
+    [dir="rtl"] { font-family: Tahoma, Arial, sans-serif; }
+}
+@layer components {
+    .card { @apply rounded-2xl border border-slate-200/80 bg-white shadow-sm; }
+    .page-title { @apply text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl; }
+    .muted { @apply text-sm leading-6 text-slate-500; }
+    .btn { @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition disabled:cursor-wait disabled:opacity-60; }
+    .btn-primary { @apply btn bg-emerald-700 text-white hover:bg-emerald-800 focus:ring-emerald-500; }
+    .btn-secondary { @apply btn border border-slate-200 bg-white text-slate-700 hover:bg-slate-50; }
+    .btn-danger { @apply btn bg-red-600 text-white hover:bg-red-700; }
+    .field { @apply block w-full rounded-lg border-slate-300 bg-white py-2.5 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500; }
+    .field[aria-invalid="true"] { @apply border-red-500; }
+    [dir="rtl"] select.field { background-position: left .75rem center; padding-left: 2.5rem; padding-right: .75rem; }
+    input[type="number"] { font-variant-numeric: tabular-nums; }
+    .label { @apply mb-1.5 block text-sm font-medium text-slate-700; }
+    .nav-link { @apply flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-400 transition hover:bg-white/5 hover:text-white; }
+    .nav-active { @apply bg-emerald-400/10 text-emerald-300 ring-1 ring-inset ring-emerald-400/20; }
+    .table-wrap { @apply relative overflow-x-auto; }
+    .data-table { @apply w-full whitespace-nowrap text-start text-sm; }
+    .data-table th { @apply border-y border-slate-100 bg-slate-50/80 px-5 py-3 text-start text-xs font-medium text-slate-500; }
+    .data-table td { @apply border-b border-slate-100 px-5 py-4; }
+    .data-table tbody tr { @apply transition hover:bg-slate-50/70; }
+    .text-link { @apply rounded font-medium text-emerald-700 transition hover:text-emerald-900 hover:underline; }
 }

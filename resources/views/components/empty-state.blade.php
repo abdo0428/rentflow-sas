@@ -1,0 +1,2 @@
+@props(['title' => null, 'description' => null, 'icon' => 'empty'])
+<div class="flex flex-col items-center px-6 py-14 text-center"><span class="mb-5 rounded-2xl border border-emerald-100 bg-emerald-50 p-4 text-emerald-600"><x-icon :name="$icon" class="h-8 w-8"/></span><h3 class="text-lg font-semibold text-slate-800">{{ $title ?? __('app.empty_title') }}</h3><p class="muted mt-2 max-w-sm">{{ $description ?? __('app.empty_description') }}</p>@isset($actions)<div class="mt-6">{{ $actions }}</div>@endisset</div>

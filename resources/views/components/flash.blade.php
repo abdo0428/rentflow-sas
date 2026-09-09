@@ -1,0 +1,4 @@
+@foreach(['success', 'error'] as $kind)
+@if(session($kind))<div x-data="{ visible: true }" x-show="visible" role="{{ $kind === 'error' ? 'alert' : 'status' }}" @class(['flex items-start gap-3 rounded-xl border p-4 text-sm', 'border-emerald-200 bg-emerald-50 text-emerald-900' => $kind === 'success', 'border-red-200 bg-red-50 text-red-800' => $kind === 'error'])><x-icon :name="$kind === 'success' ? 'check' : 'close'"/><p class="flex-1">{{ session($kind) }}</p><button @click="visible = false" class="rounded p-0.5" aria-label="{{ __('property.dismiss') }}"><x-icon name="close" class="h-4 w-4"/></button></div>@endif
+@endforeach
+@if($errors->any())<div role="alert" tabindex="-1" class="rounded-xl border border-red-200 bg-red-50 p-5 text-sm text-red-800"><h2 class="font-semibold">{{ __('property.validation_title') }}</h2><ul class="mt-2 list-inside list-disc space-y-1">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
