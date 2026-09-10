@@ -12,6 +12,6 @@ class AppLayout extends Component
      */
     public function render(): View
     {
-        return view('layouts.app');
+        return view(auth()->user()?->hasRole('tenant') ? 'layouts.tenant' : 'layouts.app');
     }
 }

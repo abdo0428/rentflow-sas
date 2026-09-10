@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="csrf-token" content="{{ csrf_token() }}"><title>{{ __('app.brand') }} · {{ __('app.tagline') }}</title>@vite(['resources/css/app.css', 'resources/js/app.js'])</head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="csrf-token" content="{{ csrf_token() }}"><title>{{ __('app.brand') }} · {{ __('app.tagline') }}</title>@vite(['resources/css/app.css', 'resources/js/app.js'])<x-pwa-head/></head>
 <body>
 <div class="grid min-h-screen lg:grid-cols-2">
     <section class="relative hidden flex-col overflow-hidden bg-slate-950 p-12 text-white lg:flex xl:p-16">

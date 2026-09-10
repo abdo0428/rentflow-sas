@@ -1,0 +1,4 @@
+<x-app-layout>
+    <x-page-header :title="__('portal.my_unit')" :description="__('portal.unit_intro')" icon="units"/>
+    @if($unit)<div class="grid items-start gap-6 md:grid-cols-[2fr_3fr]"><section class="rounded-2xl bg-slate-950 p-7 text-white"><x-icon name="buildings" class="h-10 w-10 text-emerald-300"/><h2 class="mt-6 text-2xl font-semibold">{{ $unit->building?->name }}</h2><p class="mt-3 text-sm leading-7 text-slate-400">{{ $unit->building?->address }}</p><p class="mt-6 text-4xl font-semibold">{{ $unit->unit_number }}</p></section><x-card :title="__('portal.my_unit')"><x-details-list :record="$unit" :fields="['unit_number','floor','type','area','status']"/></x-card></div>@else<x-card><x-empty-state :title="__('portal.no_unit')" :description="__('portal.no_unit_hint')" icon="units"/></x-card>@endif
+</x-app-layout>

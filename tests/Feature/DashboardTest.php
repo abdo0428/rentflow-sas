@@ -76,7 +76,7 @@ test('demo seeding can be repeated without duplicating records', function () {
     $this->assertDatabaseCount('management_companies', 1);
     $this->assertDatabaseCount('buildings', 2);
     $this->assertDatabaseCount('units', 12);
-    $this->assertDatabaseCount('rent_payments', 9);
+    $this->assertDatabaseCount('rent_payments', 36);
     $this->assertDatabaseCount('documents', 1);
 });
 

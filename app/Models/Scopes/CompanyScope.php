@@ -82,11 +82,16 @@ class CompanyScope implements Scope
                 ->where(function (Builder $query) {
                     $query->whereIn('target', ['all', 'company'])
                         ->orWhere(function (Builder $query) {
-                            $query->where('target', 'building')->whereIn('building_id', Building::query()->select('id'));
+                            $query->where('target', 'building')->whereIn('building_id', Unit::query()->select('building_id')
+                                ->whereHas('leases', fn (Builder $leases) => $leases->where('status', 'active')->whereDate('start_date', '<=', today())->whereDate('end_date', '>=', today())));
                         });
                 });
         } elseif ($model instanceof Document) {
-            $builder->whereHasMorph('documentable', [Tenant::class, LeaseContract::class, RentPayment::class, MaintenanceRequest::class, Unit::class]);
+            $builder->whereHasMorph('documentable', [Tenant::class, LeaseContract::class, RentPayment::class, MaintenanceRequest::class, Unit::class], function (Builder $query, string $type) {
+                if ($type === Unit::class) {
+                    $query->whereHas('leases', fn (Builder $leases) => $leases->where('status', 'active')->whereDate('start_date', '<=', today())->whereDate('end_date', '>=', today()));
+                }
+            });
         } else {
             $builder->whereRaw('1 = 0');
         }

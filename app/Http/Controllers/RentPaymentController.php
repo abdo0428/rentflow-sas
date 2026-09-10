@@ -47,14 +47,20 @@ class RentPaymentController extends Controller
             $filters['status'] = 'overdue';
         }
         $query = RentPayment::with(['tenant', 'unit.building', 'leaseContract'])
-            ->when($filters['status'] ?? null, fn ($query, $status) => $query->where('status', $status))
+            ->when($filters['status'] ?? null, function ($query, $status) {
+                if ($status === 'overdue') {
+                    $query->whereIn('status', ['pending', 'overdue'])->whereDate('due_date', '<', today());
+                } else {
+                    $query->where('status', $status);
+                }
+            })
             ->when($filters['tenant_id'] ?? null, fn ($query, $id) => $query->where('tenant_id', $id))
             ->when($filters['building_id'] ?? null, fn ($query, $id) => $query->whereHas('unit', fn ($query) => $query->where('building_id', $id)))
             ->when($filters['date_from'] ?? null, fn ($query, $date) => $query->whereDate('due_date', '>=', $date))
             ->when($filters['date_to'] ?? null, fn ($query, $date) => $query->whereDate('due_date', '<=', $date));
         $totals = (clone $query)->selectRaw('status, SUM(amount) AS aggregate')->groupBy('status')->pluck('aggregate', 'status');
 
-        return view('payments.index', [
+        return view(auth()->user()->hasRole('tenant') ? 'tenant.payments' : 'payments.index', [
             'payments' => $query->orderBy('due_date')->orderBy('id')->paginate(12)->withQueryString(),
             'filters' => $filters, 'overdueOnly' => $overdueOnly, 'totals' => $totals,
             'outstanding' => ($totals['pending'] ?? 0) + ($totals['overdue'] ?? 0),

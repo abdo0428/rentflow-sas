@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="breadcrumbs"><x-breadcrumbs :items="[__('app.payments') => route('payments.index'), __('workflow.payment_reference', ['id' => $payment->id]) => null]"/></x-slot>
-    <x-page-header :title="__('workflow.payment_reference', ['id' => $payment->id])" :description="$payment->tenant?->full_name" icon="payments"><x-slot name="actions"><x-badge :value="$payment->status"/></x-slot></x-page-header>
+    <x-page-header :title="__('workflow.payment_reference', ['id' => $payment->id])" :description="$payment->tenant?->full_name" icon="payments"><x-slot name="actions">@if($payment->status === 'paid' && $payment->paid_at)<a href="{{ route('payments.receipt', $payment) }}" class="btn-secondary">{{ __('portal.download_receipt') }}</a>@endif<x-badge :value="$payment->status"/></x-slot></x-page-header>
     <div class="grid items-start gap-6 xl:grid-cols-[3fr_2fr]">
         <div class="space-y-6">
             <div class="rounded-2xl bg-slate-950 p-7 text-white"><p class="text-xs font-medium text-emerald-300">{{ __('app.amount') }}</p><p class="mt-3 text-4xl font-semibold tabular-nums">{{ number_format($payment->amount, 2) }} <span class="text-lg font-normal text-slate-400">{{ __('app.sar') }}</span></p><p class="mt-5 text-sm text-slate-400">{{ $payment->unit?->building?->name }} · {{ $payment->unit?->unit_number }}</p></div>

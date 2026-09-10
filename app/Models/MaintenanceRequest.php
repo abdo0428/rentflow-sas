@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['company_id', 'building_id', 'unit_id', 'tenant_id', 'assigned_to', 'title', 'description', 'priority', 'status', 'preferred_date', 'completed_at'])]
+#[Fillable(['company_id', 'building_id', 'unit_id', 'tenant_id', 'assigned_to', 'title', 'description', 'priority', 'status', 'preferred_date', 'completed_at', 'photo_path'])]
 class MaintenanceRequest extends Model
 {
     use BelongsToCompany, HasDocuments, HasFactory;

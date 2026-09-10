@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="breadcrumbs"><x-breadcrumbs :items="[__('app.leases') => route('leases.index'), $lease->contract_number => null]"/></x-slot>
-    <x-page-header :title="$lease->contract_number" :description="$lease->tenant?->full_name" icon="leases"><x-slot name="actions"><x-badge :value="$lease->status"/><x-detail-actions :record="$lease" module="leases" :label="$lease->contract_number"/></x-slot></x-page-header>
+    <x-page-header :title="$lease->contract_number" :description="$lease->tenant?->full_name" icon="leases"><x-slot name="actions"><a href="{{ route('leases.pdf', $lease) }}" class="btn-secondary">{{ __('portal.download_contract') }}</a><x-badge :value="$lease->status"/><x-detail-actions :record="$lease" module="leases" :label="$lease->contract_number"/></x-slot></x-page-header>
     <div class="grid gap-4 sm:grid-cols-3"><x-stat-card :label="__('app.monthly_rent')" :value="number_format($lease->monthly_rent, 2).' '.__('app.sar')" icon="payments"/><x-stat-card :label="__('workflow.attributes.security_deposit')" :value="number_format($lease->security_deposit, 2).' '.__('app.sar')" icon="leases"/><x-stat-card :label="__('workflow.attributes.payment_due_day')" :value="$lease->payment_due_day" icon="payments"/></div>
     <div class="grid items-start gap-6 xl:grid-cols-[2fr_1fr]">
         <x-card :title="__('workflow.contract_details')"><x-details-list :record="$lease" :fields="['contract_number','start_date','end_date','status']" translation="workflow.attributes"/></x-card>

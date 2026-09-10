@@ -7,9 +7,11 @@ use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\MaintenanceRequestController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PdfDocumentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RentPaymentController;
 use App\Http\Controllers\TenantController;
+use App\Http\Controllers\TenantPortalController;
 use App\Http\Controllers\UnitController;
 use App\Support\Navigation;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +21,14 @@ Route::post('/locale', LocaleController::class)->middleware('throttle:30,1')->na
 
 Route::middleware(['auth', 'active', 'verified'])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::prefix('tenant')->name('tenant.')->middleware('can:tenantPortal')->group(function () {
+        Route::get('/unit', [TenantPortalController::class, 'unit'])->middleware('permission:units.view')->name('unit');
+        Route::get('/lease', [TenantPortalController::class, 'lease'])->middleware('permission:leases.view')->name('lease');
+        Route::get('/announcements', [TenantPortalController::class, 'announcements'])->middleware('permission:announcements.view')->name('announcements');
+        Route::get('/documents', [TenantPortalController::class, 'documents'])->middleware('permission:documents.view')->name('documents');
+    });
+    Route::get('/leases/{lease}/pdf', [PdfDocumentController::class, 'contract'])->middleware(['permission:leases.view', 'throttle:30,1'])->name('leases.pdf');
+    Route::get('/payments/{payment}/receipt', [PdfDocumentController::class, 'receipt'])->middleware(['permission:payments.view', 'throttle:30,1'])->name('payments.receipt');
     foreach (['buildings' => BuildingController::class, 'units' => UnitController::class, 'tenants' => TenantController::class, 'leases' => LeaseContractController::class] as $resource => $controller) {
         Route::resource($resource, $controller)
             ->middlewareFor(['index', 'show'], 'permission:'.$resource.'.view')
@@ -43,6 +53,7 @@ Route::middleware(['auth', 'active', 'verified'])->group(function () {
     Route::get('/maintenance/create', [MaintenanceRequestController::class, 'create'])->middleware('permission:maintenance.create')->name('maintenance.create');
     Route::post('/maintenance', [MaintenanceRequestController::class, 'store'])->middleware('permission:maintenance.create')->name('maintenance.store');
     Route::get('/maintenance/{maintenanceRequest}', [MaintenanceRequestController::class, 'show'])->middleware('permission:maintenance.view')->name('maintenance.show');
+    Route::get('/maintenance/{maintenanceRequest}/photo', [MaintenanceRequestController::class, 'photo'])->middleware('permission:maintenance.view')->name('maintenance.photo');
     Route::patch('/maintenance/{maintenanceRequest}/assign', [MaintenanceRequestController::class, 'assign'])->middleware('permission:maintenance.assign')->name('maintenance.assign');
     Route::patch('/maintenance/{maintenanceRequest}/status', [MaintenanceRequestController::class, 'transition'])->middleware('permission:maintenance.update')->name('maintenance.transition');
     Route::post('/maintenance/{maintenanceRequest}/notes', [MaintenanceRequestController::class, 'note'])->middleware('permission:maintenance.update')->name('maintenance.note');

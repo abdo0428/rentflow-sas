@@ -17,7 +17,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MaintenanceRequestController extends Controller
 {
@@ -33,10 +35,10 @@ class MaintenanceRequestController extends Controller
         }
         $counts = MaintenanceRequest::selectRaw('status, COUNT(*) AS aggregate')->groupBy('status')->pluck('aggregate', 'status');
         $buildingOptions = auth()->user()->hasRole('maintenance_staff')
-            ? $this->displayQuery()->get()->pluck('building_label', 'building_id')
+            ? DB::table('buildings')->whereIn('id', MaintenanceRequest::select('building_id'))->orderBy('name')->pluck('name', 'id')
             : Building::orderBy('name')->pluck('name', 'id');
 
-        return view('maintenance.index', [
+        return view(auth()->user()->hasRole('tenant') ? 'tenant.maintenance' : 'maintenance.index', [
             'requests' => $query->latest('id')->paginate(10)->withQueryString(), 'filters' => $filters,
             'counts' => $counts, 'buildings' => $buildingOptions, 'staff' => $this->staffOptions()->pluck('name', 'id'),
             'openCount' => $counts->only(['new', 'under_review', 'assigned', 'in_progress'])->sum(),
@@ -81,6 +83,14 @@ class MaintenanceRequestController extends Controller
         $this->workflow->assign($maintenanceRequest, $request->integer('assigned_to'));
 
         return back()->with('success', __('workflow.staff_assigned'));
+    }
+
+    public function photo(MaintenanceRequest $maintenanceRequest): StreamedResponse
+    {
+        Gate::authorize('view', $maintenanceRequest);
+        abort_unless($maintenanceRequest->photo_path && Storage::disk('local')->exists($maintenanceRequest->photo_path), 404);
+
+        return Storage::disk('local')->download($maintenanceRequest->photo_path);
     }
 
     public function transition(TransitionMaintenanceRequest $request, MaintenanceRequest $maintenanceRequest): RedirectResponse

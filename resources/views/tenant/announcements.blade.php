@@ -1,0 +1,1 @@
+<x-app-layout><x-page-header :title="__('portal.announcements')" :description="__('portal.announcements_intro')" icon="announcements"/><x-announcement-cards :announcements="$announcements"/>{{ $announcements->links('components.pagination') }}</x-app-layout>

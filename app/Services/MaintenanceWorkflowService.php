@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Notifications\WorkflowNotification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class MaintenanceWorkflowService
@@ -26,30 +27,41 @@ class MaintenanceWorkflowService
     public function create(array $data): MaintenanceRequest
     {
         Gate::authorize('create', MaintenanceRequest::class);
+        $photoPath = isset($data['photo']) ? $data['photo']->store('maintenance', 'local') : null;
+        if ($photoPath === false) {
+            throw ValidationException::withMessages(['photo' => __('portal.photo_failed')]);
+        }
+        try {
+            return DB::transaction(function () use ($data, $photoPath) {
+                $unit = Unit::lockForUpdate()->findOrFail($data['unit_id']);
+                $tenant = auth()->user()->hasRole('tenant')
+                    ? Tenant::where('user_id', auth()->id())->firstOrFail()
+                    : Tenant::where('company_id', $unit->company_id)->findOrFail($data['tenant_id']);
+                if (! LeaseContract::where('tenant_id', $tenant->id)->where('unit_id', $unit->id)
+                    ->where('status', 'active')->whereDate('start_date', '<=', today())->whereDate('end_date', '>=', today())->exists()) {
+                    throw ValidationException::withMessages(['unit_id' => __('workflow.maintenance_lease_required')]);
+                }
+                $request = MaintenanceRequest::create([
+                    'company_id' => $unit->company_id, 'building_id' => $unit->building_id,
+                    'unit_id' => $unit->id, 'tenant_id' => $tenant->id, 'title' => $data['title'],
+                    'description' => $data['description'], 'priority' => $data['priority'],
+                    'preferred_date' => $data['preferred_date'] ?? null, 'status' => 'new',
+                    'photo_path' => $photoPath,
+                ]);
+                $this->record($request, null, 'maintenance.created');
+                User::where('company_id', $request->company_id)->where('status', 'active')
+                    ->role(['company_admin', 'property_manager'])->each(fn (User $user) => $user->notify(
+                        new WorkflowNotification('maintenance_new', 'maintenance.show', $request->id, ['title' => $request->title])
+                    ));
 
-        return DB::transaction(function () use ($data) {
-            $unit = Unit::lockForUpdate()->findOrFail($data['unit_id']);
-            $tenant = auth()->user()->hasRole('tenant')
-                ? Tenant::where('user_id', auth()->id())->firstOrFail()
-                : Tenant::where('company_id', $unit->company_id)->findOrFail($data['tenant_id']);
-            if (! LeaseContract::where('tenant_id', $tenant->id)->where('unit_id', $unit->id)
-                ->where('status', 'active')->whereDate('start_date', '<=', today())->whereDate('end_date', '>=', today())->exists()) {
-                throw ValidationException::withMessages(['unit_id' => __('workflow.maintenance_lease_required')]);
+                return $request;
+            }, 3);
+        } catch (\Throwable $exception) {
+            if ($photoPath) {
+                Storage::disk('local')->delete($photoPath);
             }
-            $request = MaintenanceRequest::create([
-                'company_id' => $unit->company_id, 'building_id' => $unit->building_id,
-                'unit_id' => $unit->id, 'tenant_id' => $tenant->id, 'title' => $data['title'],
-                'description' => $data['description'], 'priority' => $data['priority'],
-                'preferred_date' => $data['preferred_date'] ?? null, 'status' => 'new',
-            ]);
-            $this->record($request, null, 'maintenance.created');
-            User::where('company_id', $request->company_id)->where('status', 'active')
-                ->role(['company_admin', 'property_manager'])->each(fn (User $user) => $user->notify(
-                    new WorkflowNotification('maintenance_new', 'maintenance.show', $request->id, ['title' => $request->title])
-                ));
-
-            return $request;
-        }, 3);
+            throw $exception;
+        }
     }
 
     public function assign(MaintenanceRequest $request, int $staffId): void

@@ -28,6 +28,15 @@ for (const viewport of [{ name: 'desktop', width: 1440, height: 1050 }, { name: 
             expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
             await page.getByRole('link', { name: locale === 'ar' ? 'التالي' : 'Next', exact: true }).click();
             await expect(page.locator('tbody tr')).toHaveCount(2);
+            for (const module of ['buildings', 'tenants', 'leases', 'documents']) {
+                expect((await page.goto('/' + module)).status()).toBe(200);
+                expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+                expect(await page.locator('main').innerText()).not.toMatch(/\b(?:portal|workflow|property|app)\.[a-z_]+/);
+                await page.screenshot({ path: testInfo.outputPath(module + '-index.png'), fullPage: true });
+                await page.locator('tbody tr a').first().click();
+                expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+                await page.screenshot({ path: testInfo.outputPath(module + '-details.png'), fullPage: true });
+            }
             await page.goto('/profile');
             await page.getByRole('button', { name: locale === 'ar' ? 'حذف الحساب' : 'Delete account', exact: true }).click();
             await expect(page.getByRole('dialog')).toBeVisible();

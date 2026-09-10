@@ -16,6 +16,7 @@ for (const viewport of [{ name: 'desktop', width: 1440, height: 1000 }, { name: 
             const checkPage = async (name) => {
                 await expect(page.locator('html')).toHaveAttribute('dir', ar ? 'rtl' : 'ltr');
                 expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+                expect(await page.locator('main dl').evaluateAll(items => items.every(element => element.scrollWidth <= element.clientWidth + 1))).toBe(true);
                 expect(await page.locator('main').innerText()).not.toMatch(/\b(?:workflow|property|app)\.[a-z_]+/);
                 await page.screenshot({ path: testInfo.outputPath(name + '.png'), fullPage: true });
             };
@@ -47,7 +48,7 @@ for (const viewport of [{ name: 'desktop', width: 1440, height: 1000 }, { name: 
             let draftUrl;
             try {
                 await page.goto('/leases/create');
-                const number = 'BROWSER-' + Date.now();
+                const number = 'BROWSER-' + Date.now() + 'X'.repeat(65);
                 await page.locator('[name="contract_number"]').fill(number);
                 await page.locator('[name="tenant_id"]').selectOption({ index: 1 });
                 await page.locator('[name="unit_id"]').selectOption({ index: 1 });

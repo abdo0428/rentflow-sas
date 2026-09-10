@@ -18,7 +18,8 @@ class LeaseContractSeeder extends Seeder
             $units = Unit::where('company_id', $company->id)->orderBy('id')->take(3)->get();
             foreach (Tenant::where('company_id', $company->id)->orderBy('id')->get() as $index => $tenant) {
                 $unit = $units[$index];
-                LeaseContract::firstOrCreate(['company_id' => $company->id, 'contract_number' => 'RF-2026-00'.($index + 1)], ['tenant_id' => $tenant->id, 'unit_id' => $unit->id, 'start_date' => today()->startOfYear(), 'end_date' => today()->endOfYear(), 'monthly_rent' => $unit->rent_amount, 'security_deposit' => $unit->rent_amount, 'payment_due_day' => 1, 'status' => 'active']);
+                $start = today()->startOfMonth()->subMonths(2);
+                LeaseContract::firstOrCreate(['company_id' => $company->id, 'contract_number' => 'RF-DEMO-00'.($index + 1)], ['tenant_id' => $tenant->id, 'unit_id' => $unit->id, 'start_date' => $start, 'end_date' => $start->copy()->addYear()->subDay(), 'monthly_rent' => $unit->rent_amount, 'security_deposit' => $unit->rent_amount, 'payment_due_day' => 1, 'status' => 'active']);
                 $unit->update(['status' => 'occupied']);
             }
         });

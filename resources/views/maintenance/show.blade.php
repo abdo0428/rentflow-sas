@@ -3,6 +3,7 @@
     <x-page-header :title="$maintenanceRequest->title" :description="$maintenanceRequest->building_label.' · '.$maintenanceRequest->unit_label" icon="maintenance"><x-slot name="actions"><x-badge :value="$maintenanceRequest->priority"/><x-badge :value="$maintenanceRequest->status"/></x-slot></x-page-header>
     <div class="grid items-start gap-6 xl:grid-cols-[3fr_2fr]">
         <div class="min-w-0 space-y-6">
+            @if($maintenanceRequest->photo_path)<a href="{{ route('maintenance.photo', $maintenanceRequest) }}" class="btn-secondary"><x-icon name="documents"/>{{ __('portal.view_photo') }}</a>@endif
             <x-card :title="__('workflow.request_description')"><p class="whitespace-pre-line break-words p-6 text-sm leading-7 text-slate-600">{{ $maintenanceRequest->description }}</p><x-details-list :record="$maintenanceRequest" :fields="['priority','preferred_date','created_at','completed_at']" translation="workflow.attributes"/><div class="border-t border-slate-100 px-6 py-4 text-sm"><span class="text-slate-400">{{ __('workflow.attributes.assigned_to') }}</span><span class="ms-3 font-semibold">{{ $maintenanceRequest->assignee?->name ?? __('workflow.unassigned') }}</span></div></x-card>
             <x-card :title="__('workflow.timeline')" :description="__('workflow.timeline_hint')">
                 <ol class="m-6 space-y-6 border-s-2 border-emerald-100 ps-6">

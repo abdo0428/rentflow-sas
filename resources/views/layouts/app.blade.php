@@ -4,6 +4,7 @@
     <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ __('app.brand') }} · {{ __('app.tagline') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <x-pwa-head/>
 </head>
 <body x-data="{ sidebarOpen: false }" @keydown.escape.window="if (sidebarOpen) { sidebarOpen = false; $refs.mobileToggle.focus() }">
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:z-50 focus:bg-white focus:p-4">{{ __('app.skip_content') }}</a>
@@ -44,7 +45,8 @@
             </div>
         </header>
         <main id="main" class="mx-auto max-w-[1600px] space-y-7 p-4 py-7 sm:p-8 lg:p-10">
-            <x-flash/>
+            <div data-offline-banner hidden class="rounded-lg bg-amber-100 p-4 text-sm text-amber-900" role="status">{{ __('portal.offline_banner') }}</div>
+            <x-pwa-install/><x-flash/>
             {{ $slot }}
             <x-delete-confirmation/>
         </main>
